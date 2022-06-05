@@ -10,28 +10,64 @@ chessboard = dir_path + '\\Chess_Board.png'
 
 class Yuki:
 
-    def __build_board(self):
+    def __build_board(self) -> list:
         return [[0]*8]*8
 
-    def __board_loca_to_px(self, x, y):
+    def __pos_to_px(self, x: int, y: int) -> tuple:
         step = 140
         return step + (252 * x), step + (252 * y)
 
+    def __vaild_pos(self, x: int, y: int) -> bool:
+        return 0 < x < 9 and 0 < y < 9       
 
     def __init__(self) -> None:
         self.board = self.__build_board()
         self.image_path = chessboard
 
-    def draw_line_from_points(self, x1, y1, x2, y2):
-        with Image.open(self.image_path) as im:
-            draw = ImageDraw.Draw(im)
-            draw.line(self.__board_loca_to_px(x1, y1), fill=128*3)
-            draw.line(self.__board_loca_to_px(x2, y2), fill=128*3)
+    def draw_line_from_points(self, start: tuple, end: tuple, image = None) -> Image:
+        x1, y1 = self.__pos_to_px(*start)
+        x2, y2 = self.__pos_to_px(*end)
+        image = image or Image.open(self.image_path)
 
-            im.show()
+        draw = ImageDraw.Draw(image)
+        draw.line((y1, x1, y2, x2), fill=100, width=10)
+        for pos in [(y1-15, x1-15, y1+15, x1+15), (y2-15, x2-15, y2+15, x2+15)]:
+            draw.ellipse(pos, fill=50, width=30)
+
+        return image
+
+    def draw_knight_move(self, start: tuple, end: tuple, image = None) -> Image:
+        x, y = start
+        path = list()
+        for x2, y2, direction in [(2, 0, 'h'), (0, 2, 'v'), (-2, 0, 'h'), (0, -2, 'v')]:
+            new_x, new_y = x + x2, y + y2
+            if self.__vaild_pos(new_x, new_y):
+                if direction == 'h':
+                    if ((new_x, new_y+1) == end):
+                        path = [(new_x, new_y), (new_x, new_y+1)]
+                        break
+                    elif ((new_x, new_y-1) == end):
+                        path = [(new_x, new_y), (new_x, new_y-1)]
+                        break
+                else:
+                    if ((new_x+1, new_y) == end):
+                        path = [(new_x, new_y), (new_x+1, new_y)]
+                        break
+                    elif ((new_x-1, new_y) == end):
+                        path = [(new_x, new_y), (new_x-1, new_y)]
+                        break
+
+        if path == []:
+            raise ValueError(f'Path is empty! - Check if the start{start} and end{end} pos is vaild!') 
+
+        image = image or Image.open(self.image_path)
+        image = self.draw_line_from_points(start, path[0], image)
+        image = self.draw_line_from_points(path[0], path[1], image)
+        return image
             
 
 
 yuki = Yuki()
-yuki.draw_line_from_points(0, 0, 2, 2)
-# print(yuki.board_loca_to_px(2,3))
+# image = yuki.draw_knight_move((1, 2), (3, 3))
+# image = yuki.draw_knight_move((3, 3), (2, 5), image)
+# image.show()
