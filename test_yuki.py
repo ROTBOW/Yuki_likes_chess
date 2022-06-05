@@ -6,17 +6,18 @@ import os
 dir_path = os.path.dirname(os.path.realpath(__file__)) + r'\test_images'
 my_girl = Yuki()
 
-def test_yuki_board():
+def test_yuki_has_board(): # asdasd
     '''
     Test that yuki starts with a vaild internal board.
     '''
     assert my_girl.board == [[0]*8] * 8
 
-def test_yuki_board_image_path():
+def test_yuki_has_board_image_path():
     '''
     Ensures that yuki starts with the board image
     '''
-    assert my_girl.image_path == r'C:\Users\Josiah\Desktop\random coding stuff\Yuki\Chess_Board.png'
+    path = r'C:\Users\Josiah\Desktop\random coding stuff\Yuki\Chess_Board.png'
+    assert my_girl.image_path == path
 
 def test_yuki_can_draw_line_between_points():
     '''

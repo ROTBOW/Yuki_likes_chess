@@ -1,7 +1,7 @@
 '''
 Yuki is a chess path visualtion program.
 '''
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont, ImageColor
 import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -18,7 +18,13 @@ class Yuki:
         return step + (252 * x), step + (252 * y)
 
     def __vaild_pos(self, x: int, y: int) -> bool:
-        return 0 < x < 9 and 0 < y < 9       
+        return 0 < x < 9 and 0 < y < 9
+
+    def __draw_step_at_pos(self, pos: tuple, step: int, image: Image) -> Image:
+        draw = ImageDraw.Draw(image)
+        x, y = self.__pos_to_px(*pos)
+        draw.text((x-6, y-13), str(step), font=ImageFont.truetype('BauhausRegular.ttf', size=24), fill=200)
+        return image
 
     def __init__(self) -> None:
         self.board = self.__build_board()
@@ -36,7 +42,7 @@ class Yuki:
 
         return image
 
-    def draw_knight_move(self, start: tuple, end: tuple, image = None) -> Image:
+    def draw_knight_move(self, start: tuple, end: tuple, image: Image = None, step: int = 0) -> Image:
         x, y = start
         path = list()
         for x2, y2, direction in [(2, 0, 'h'), (0, 2, 'v'), (-2, 0, 'h'), (0, -2, 'v')]:
@@ -63,11 +69,14 @@ class Yuki:
         image = image or Image.open(self.image_path)
         image = self.draw_line_from_points(start, path[0], image)
         image = self.draw_line_from_points(path[0], path[1], image)
+        image = self.__draw_step_at_pos(end, step, image)
         return image
             
 
 
 yuki = Yuki()
+
 # image = yuki.draw_knight_move((1, 2), (3, 3))
 # image = yuki.draw_knight_move((3, 3), (2, 5), image)
+# image = yuki.draw_knight_move((4, 6), (2, 5), image)
 # image.show()
