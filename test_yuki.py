@@ -6,7 +6,7 @@ import os
 dir_path = os.path.dirname(os.path.realpath(__file__)) + r'\test_images'
 my_girl = Yuki()
 
-def test_yuki_has_board(): # asdasd
+def test_yuki_has_board(): # May not be needed.
     '''
     Test that yuki starts with a vaild internal board.
     '''
@@ -34,3 +34,10 @@ def test_yuki_can_draw_knights_L():
     get = my_girl.draw_knight_move((1, 2), (3, 3))
     want = Image.open(dir_path+r'\test_2.png')
     assert list(get.getdata()) == list(want.getdata())
+
+
+def test_yuki_gets_paths():
+    my_girl.build_knight_paths((0,0), (5, 5))
+    get = (len(my_girl.paths), min(my_girl.paths))
+    want = (67, [(0, 0), (2, 1), (0, 2), (2, 3), (0, 4), (2, 5), (0, 6), (2, 7), (0, 8), (1, 6), (3, 7), (1, 8), (2, 6), (0, 5), (0, 7), (2, 8), (4, 7), (6, 8), (6, 6), (5, 5)])
+    assert get == want
