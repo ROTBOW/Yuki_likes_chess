@@ -10,9 +10,6 @@ chessboard = dir_path + '\\Chess_Board.png'
 
 class Yuki:
 
-    def __build_board(self) -> list:
-        return [[0]*8]*8
-
     def __pos_to_px(self, x: int, y: int) -> tuple:
         step = 140
         return step + (252 * x), step + (252 * y)
@@ -47,7 +44,6 @@ class Yuki:
         return path
 
     def __init__(self) -> None:
-        self.board = self.__build_board()
         self.image_path = chessboard
         self.paths = []
         self.shortest_path = float('inf')
