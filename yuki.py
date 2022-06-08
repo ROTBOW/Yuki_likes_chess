@@ -15,7 +15,7 @@ class Yuki:
         return step + (252 * x), step + (252 * y)
 
     def __vaild_pos(self, x: int, y: int) -> bool:
-        return 0 <= x < 9 and 0 <= y < 9
+        return 0 <= x < 8 and 0 <= y < 8
 
     def __draw_step_at_pos(self, pos: tuple, step: int, image: Image) -> Image:
         draw = ImageDraw.Draw(image)
@@ -24,6 +24,7 @@ class Yuki:
         return image
 
     def __draw_path(self, end: tuple, x: int, y: int) -> list:
+        path = []
         for x2, y2, direction in [(2, 0, 'h'), (0, 2, 'v'), (-2, 0, 'h'), (0, -2, 'v')]:
             new_x, new_y = x + x2, y + y2
             if self.__vaild_pos(new_x, new_y):
@@ -78,31 +79,38 @@ class Yuki:
 
     def draw_knight_from_path(self, path: list[tuple]) -> None:
         image = Image.open(self.image_path)
-        for step in range(1, len(path)-1, -1):
+        for step in range(len(path)-1, 0, -1):
             start, end = path[step], path[step-1]
-            image = self.draw_knight_move(start, end, image, step)
-        # image.show()
+            image = self.draw_knight_move(end, start, image=image, step=step)
+        image_name = f'\\kp_{path[0]}_to_{path[-1]}.png'
+        if not os.path.isdir(dir_path+r'\results'):
+            os.mkdir('results')
+        if not os.path.exists(dir_path+r'\results'+image_name):
+            image.save(dir_path+r'\results'+image_name)
 
     def build_knight_paths(self, start: tuple, end: tuple, path: list = []) -> None:
-        path = path or [start]
+        if path == []:
+            path = [start]
 
         if len(path) > self.shortest_path:
-            return None
+            return
 
         if start == end and path not in self.paths:
             self.shortest_path = min(self.shortest_path, len(path))
             self.paths.append(path)
             return
 
-        for move in [(-2, -1), (-2, 1), (2, 1), (2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]:
+        for move in [(2, 1), (1, 2), (1, -2), (-1, -2), (-2, -1), (-2, 1), (2, -1), (-1, 2)]:
             x, y = start[0] + move[0], start[1] + move[1]
             if self.__vaild_pos(x, y) and (x, y) not in path:
-                path.append((x, y))
-                self.build_knight_paths((x, y), end, path.copy())
+                self.build_knight_paths((x, y), end, path + [(x, y)])
         return
 
 
-
+    def play_knight(self, start: tuple, target: tuple) -> None:
+        self.paths = []
+        self.build_knight_paths(start, target)
+        self.draw_knight_from_path(min(self.paths))
             
 
 
@@ -113,9 +121,15 @@ yuki = Yuki()
 # image = yuki.draw_knight_move((1, 2), (3, 3), image=image, step=0)
 # image.show()
 
+short_path = [(0,0), (2, 1), (4, 2), (6, 3), (5, 5)]
 
+# yuki.build_knight_paths((0, 0), (7, 5))
 # yuki.build_knight_paths((0, 0), (5, 5))
+# # print(yuki.paths)
 # print(len(yuki.paths))
 # print(min(yuki.paths))
-# yuki.draw_knight_from_path([(1, 2), (3, 3), (2, 5), (0, 6)])
+# # print(short_path in yuki.paths)
+# yuki.draw_knight_from_path(min(yuki.paths))
+# [(1, 2), (3, 3), (2, 5), (0, 6)]
+yuki.play_knight((0, 0), (4, 7))
 

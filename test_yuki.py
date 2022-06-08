@@ -8,7 +8,7 @@ my_girl = Yuki()
 
 def test_yuki_has_board_image_path():
     '''
-    Ensures that yuki starts with the board image
+    Ensures that yuki starts with the board image path
     '''
     path = r'C:\Users\Josiah\Desktop\random coding stuff\Yuki\Chess_Board.png'
     assert my_girl.image_path == path
