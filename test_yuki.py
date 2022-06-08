@@ -33,5 +33,5 @@ def test_yuki_can_draw_knights_L():
 def test_yuki_gets_paths():
     my_girl.build_knight_paths((0,0), (5, 5))
     get = (len(my_girl.paths), min(my_girl.paths))
-    want = (67, [(0, 0), (2, 1), (0, 2), (2, 3), (0, 4), (2, 5), (0, 6), (2, 7), (0, 8), (1, 6), (3, 7), (1, 8), (2, 6), (0, 5), (0, 7), (2, 8), (4, 7), (6, 8), (6, 6), (5, 5)])
+    want = (99, [(0, 0), (1, 2), (2, 4), (3, 6), (5, 5)])
     assert get == want

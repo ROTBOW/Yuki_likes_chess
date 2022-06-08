@@ -1,7 +1,7 @@
 '''
 Yuki is a chess path visualtion program.
 '''
-from PIL import Image, ImageDraw, ImageFont, ImageColor
+from PIL import Image, ImageDraw, ImageFont
 import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -114,22 +114,11 @@ class Yuki:
             
 
 
-yuki = Yuki()
-
-# image = yuki.draw_knight_move((2, 5), (0, 6), step=2)
-# image = yuki.draw_knight_move((3, 3), (2, 5), image=image, step=1)
-# image = yuki.draw_knight_move((1, 2), (3, 3), image=image, step=0)
-# image.show()
-
-short_path = [(0,0), (2, 1), (4, 2), (6, 3), (5, 5)]
-
-# yuki.build_knight_paths((0, 0), (7, 5))
-# yuki.build_knight_paths((0, 0), (5, 5))
-# # print(yuki.paths)
-# print(len(yuki.paths))
-# print(min(yuki.paths))
-# # print(short_path in yuki.paths)
-# yuki.draw_knight_from_path(min(yuki.paths))
-# [(1, 2), (3, 3), (2, 5), (0, 6)]
-yuki.play_knight((0, 0), (4, 7))
+'''
+Example of use:
+    yuki = Yuki()
+    yuki.build_knight_paths((0,0), (5, 5))
+It should create a results folder and save the path from (0, 0)
+to the (5, 5).
+'''
 
